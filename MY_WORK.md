@@ -239,7 +239,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+I learned that race conditions happen when multiple threads access shared data at the same time. Critical sections need protection to prevent incorrect results. I used ReentrantLock to allow only one thread to access shared data at a time. I also learned to use try and finally to release the lock safely. The Semaphore blocks CPU threads when the ready queue is empty and prevents busy waiting.
 
 ## Question 2: What was the most challenging part of this assignment?
 
@@ -247,7 +247,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+The most challenging part was implementing the Semaphore correctly. I had to understand why its initial value should be zero. I learned that adding a process releases a permit. This allows a waiting CPU thread to continue working. I also had to make sure all CPU threads stopped after completing the processes.
 
 ## Question 3: How did you overcome the challenges you faced?
 
@@ -255,7 +255,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+I worked on the assignment one feature at a time. I read the instructions and checked the existing code. I made small changes and tested the program after each change. I compared the expected results with the actual output. I also asked for help when I faced problems.
 
 ## Question 4: Where can synchronization concepts be applied in real-world applications?
 
@@ -263,7 +263,7 @@
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+Synchronization is used in many real-world applications. Banks use locks to protect account balances during money transfers. Ticket booking systems use synchronization to prevent booking the same seat twice. Websites use it to update shared counters safely. Databases use synchronization to protect shared data from incorrect updates
 
 ### Optional: What would you like to learn more about?
 
@@ -297,20 +297,28 @@
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+The original starter had a race condition because multiple CPU threads accessed shared resources without proper synchronization. The expected context switches were 25 but the observed value was 24, and the expected completed processes were 13 but the observed value was 12. For example CPU-1 and CPU-2 can both read the completed counter as 11, pause, and then both write 12, causing one update to be lost. This can happen on real machines because thread execution can overlap unpredictably even without RaceWindow. It is difficult to detect because the error may happen only sometimes depending on thread timing.
 
 Verification block of the **original starter**:
 ```
-[Paste the verification block (or the exception/watchdog message) of the starter here]
+Context switches expected 25 observed 24 ✘
+Completed processes expected 13 observed 12 ✘
+Total service time expected 35258 observed 33985 ✘
+Busy-waiting polls expected 0 observed 574 ✘
+WATCHDOG: simulation did not finish
 ```
 
 Verification block of **my final version**:
 ```
-[Paste the verification block of your final version here (all lines ✔)]
+Context switches expected 25 observed 25 ✔
+Completed processes expected 13 observed 13 ✔
+Total service time expected 35258 observed 35258 ✔
+Busy-waiting polls expected 0 observed 0 ✔
+All shared values are consistent.
 ```
 
 **Explanation of the timeline:**
-[Explain the lost update step by step.]
+CPU-1 reads the completed counter as 11. At the same time CPU-2 also reads the counter as 11. CPU-1 increments the value and writes 12. CPU-2 also increments its old value and writes 12. The final value becomes 12 instead of 13, so one update is lost.
 
 ## Question 2: Critical Sections and Lock Granularity
 
@@ -320,12 +328,12 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+I used a ReentrantLock to protect the ReadyQueue list and map in methods such as add, poll, processOf, and snapshot. I also used a separate ReentrantLock to protect the three shared statistics counters. Using one lock for the statistics is simpler, but it can make threads wait even when they update different counters. Separate locks keep the queue and statistics independent and reduce unnecessary blocking. The locks provide mutual exclusion, but the default ReentrantLock is not fair, so bounded waiting is not guaranteed.
 
 | Critical section (variable / method) | Lock used | Why it needs protection |
 |---|---|---|
-| [e.g., `ReadyQueue.poll()`] | [lock name] | [reason] |
-| [...] | [...] | [...] |
+| ReadyQueue add |ReadyQueue lock|Prevent simultaneous modifications |
+| SharedStats counters |SharedStats lock | Prevent lost updates |
 
 ## Question 3: Busy Waiting vs Semaphore
 
@@ -335,7 +343,7 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+In the starter, CPU threads repeatedly checked the ready queue when it was empty, causing busy waiting and wasting CPU time. In my final version, I used a counting Semaphore with an initial value of zero because no permits were available before processes were added. After the 13 initial add calls, its value is 13 before any CPU acquires a permit. When a process is added, the producer releases a permit and a CPU consumer acquires it. The last CPU releases totalCPUs permits to wake blocked CPUs so they can exit after all processes are completed.
 
 ## Question 4: Classical Problems and Deadlock
 
@@ -346,24 +354,28 @@ Verification block of **my final version**:
 **Your Answer:** *(3-5 sentences)*
 
 **Classical problem and roles**:
-[Name the problem; who is the producer, who is the consumer?]
-
+Producer Consumer problem
+CPU workers act as both producers and consumers
 **Semaphores for a bounded queue (name and initial value)**:
-[Name the three semaphores and their initial values.]
+empty = K
+
+full = 0
+
+mutex = 1
 
 **Deadlock scenario and prevention**:
-[Describe the scenario and the necessary condition you would break.]
+Deadlock can happen if a producer holds the mutex while waiting for an empty slot, because the consumer needs the mutex to remove a process and free a slot. To prevent this, we must break the hold and wait condition by waiting for an empty slot before acquiring the mutex.
 
 ## Summary
 
 **Key concepts I understood through these questions:**
-1.
-2.
-3.
+1.Synchronization using ReentrantLock.
+2.Preventing race conditions and lost updates.
+3.Using Semaphores to prevent busy waiting and manage CPU threads.
 
 **Concepts I need to study more:**
-1.
-2.
+1.Deadlock conditions and prevention.
+2.Semaphore operations and Producer-Consumer problems.
 
 ---
 
