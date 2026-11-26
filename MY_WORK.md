@@ -132,68 +132,67 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
-**What I did**:
+### Entry 1 - [November 24 2026 1:00 PM]
+**What I did**:Implemented a ReentrantLock to protect the ReadyQueue list and map from simultaneous access by multiple CPU threads
 
-**Details**:
+**Details**:Multiple CPU threads could access the ready queue at the same time which could cause race conditions
 
-**Challenges**:
+**Challenges**:Preventing multiple CPU threads from modifying or accessing the ready queue at the same time
 
-**Solution**:
+**Solution**:Used ReentrantLock to ensure that only one thread can access the critical sections at a time
 
-**Time spent**:
-
----
-
-### Entry 2 - [Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Time spent**:1 hour
 
 ---
 
-### Entry 3 - [Date and Time]
-**What I did**:
+### Entry 2 - [November 26 2026 10:00AM]
+**What I did**:Implemented ReentrantLock to protect the SharedStats counters from simultaneous access by multiple CPU threads
 
-**Details**:
+**Details**:Multiple CPU threads could update shared statistics at the same time which could cause incorrect counter values
 
-**Challenges**:
+**Challenges**:Preventing race conditions when multiple CPU threads update shared statistics
 
-**Solution**:
+**Solution**:Used ReentrantLock to protect the shared counters and ensure that updates are performed safely
 
-**Time spent**:
-
----
-
-### Entry 4 - [Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Time spent**:30 minute
 
 ---
 
-### Entry 5 - [Date and Time]
-**What I did**:
+### Entry 3 - [November 26 2026 1:00 AM]
+**What I did**:Implemented a Semaphore to block CPU threads when no processes are available in the ready queue
 
-**Details**:
+**Details**:CPU threads were continuously checking the ready queue even when it was empty which caused unnecessary busy waiting
 
-**Challenges**:
+**Challenges**:Stopping CPU threads from continuously checking the ready queue when no processes are available
 
-**Solution**:
+**Solution**:Used Semaphore to block CPU threads until a new process is added to the ready queue
 
-**Time spent**:
+**Time spent**:30 minute
+
+---
+
+### Entry 4 - [November 26 2026 1:45 AM]
+**What I did**:Tested the CPU scheduling simulation after implementing the synchronization features
+
+**Details**:Checked the simulation results to make sure the synchronization features worked correctly
+
+**Challenges**:Making sure the simulation produced the expected results without busy waiting
+
+**Solution**:Compared the expected results with the actual output and verified the context switches completed processes and total service time
+
+**Time spent**:20 minute
+
+---
+
+### Entry 5 - [November 26 2026 AM]
+**What I did**:Performed the final verification of the assignment
+
+**Details**:Verified that all required features were implemented and that the simulation passed the final tests
+
+**Challenges**:Ensuring that all features worked together correctly
+**Solution**:Ran the final tests and confirmed that all expected results matched the observed results
+
+**Time spent**:25 minute
 
 ---
 
@@ -214,13 +213,13 @@
 
 > 💡 **TIP:** Fill this in **last**, after all entries are written.
 
-**Total time spent on assignment**: [X hours]
+**Total time spent on assignment**: 6 hours
 
-**Most challenging part**:
+**Most challenging part**:Implementing synchronization between multiple CPU threads and preventing race conditions when accessing shared resources
 
-**Most interesting learning**:
+**Most interesting learning**:Learning how ReentrantLock and Semaphore can be used to manage access to shared resources and block CPU threads when the ready queue is empty
 
-**What I would do differently next time**:
+**What I would do differently next time**:I would plan the implementation steps more carefully and test each feature immediately after completing it
 
 ---
 
